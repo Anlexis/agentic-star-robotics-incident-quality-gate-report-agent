@@ -1,0 +1,25 @@
+# Runtime parameters — loaded by AgentRegistry, passed as Graph(config=...).
+# Separate from config/agent.yaml (the static manifest).
+#
+# The HTTP entry point (src/api/server.py) reads this file and constructs the
+# graph with it; the outer graph hands it to the inner domain graph, which seeds
+# the bounded values into state for the nodes that read them. Every value below
+# reaches behaviour — tests/integration/test_runtime_config_e2e.py drives two
+# different declarations through /invoke and asserts the outcome differs.
+
+# Backbone retry ceiling (validated by AgentBaseGraph).
+max_retry: 3
+
+# Request deadline in seconds, enforced by the HTTP entry point.
+timeout_s: 30
+
+# Classifications below this confidence are escalated one severity step so a
+# weakly-identified incident still reaches a human. Held to [0.0, 1.0]; a value
+# outside the range, or a non-finite one, falls back to 0.5 rather than
+# disabling the escalation silently.
+low_confidence_threshold: 0.5
+
+# memory_enabled: false
+# hitl:
+#   enabled: false
+#   max_hitl: 5
